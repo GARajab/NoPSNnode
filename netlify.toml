@@ -1,4 +1,7 @@
 [build]
+  image = "hugoio/hugo:latest"
   command = "hugo"
   publish = "public"
-  functions = "netlify/functions"
+
+[build.environment]
+  HUGO_VERSION = "latest"
