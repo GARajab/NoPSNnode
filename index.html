@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PS4 Installer</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #222;
+  color: #fff;
+  padding: 20px;
+}
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+}
+#progressBar {
+  width: 100%;
+  background: #444;
+  margin-top: 20px;
+  height: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+#progress {
+  height: 100%;
+  width: 0%;
+  background: #4caf50;
+  transition: width 0.2s;
+}
+#status {
+  margin-top: 20px;
+}
+</style>
+</head>
+<body>
+
+<h1>PS4 Package Installer</h1>
+<button id="startBtn">Start Download</button>
+<div id="progressBar">
+  <div id="progress"></div>
+</div>
+<div id="status">Status: Idle</div>
+
+<script>
+const startBtn = document.getElementById('startBtn');
+const progress = document.getElementById('progress');
+const status = document.getElementById('status');
+
+let ws;
+
+startBtn.onclick = () => {
+  // Connect to WebSocket server
+  ws = new WebSocket('ws://<your-server-ip>:<port>');
+  ws.onopen = () => {
+    status.innerText = 'Connected. Starting download...';
+    ws.send(JSON.stringify({ command: 'startDownload', url: 'http://yourserver/file.pkg' }));
+  };
+  ws.onmessage = (msg) => {
+    const data = JSON.parse(msg.data);
+    if (data.type === 'progress') {
+      progress.style.width = data.percent + '%';
+      status.innerText = `Progress: ${data.percent.toFixed(1)}%`;
+    } else if (data.type === 'completed') {
+      status.innerText = 'Download complete!';
+    } else if (data.type === 'error') {
+      status.innerText = 'Error: ' + data.message;
+    }
+  };
+  ws.onerror = () => {
+    status.innerText = 'Connection error.';
+  };
+};
+</script>
+
+</body>
+</html>

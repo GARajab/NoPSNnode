@@ -1,0 +1,7 @@
+{
+  "pc_ip": "192.168.100.248",
+  "ps4_ip": "192.168.100.12",
+  "callback_port": 9022,
+  "npx_port": 8080,
+  "pkg_name": "FPKGi_v1.00.0-release.pkg"
+}
